@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scrapper Pi</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- <div style="width: 100%">
+      <button class="btn" onclick="clearDB()">Clear Database</button>
+    </div> -->
+    <h1>Scrapper Pi</h1>
+
+    <div class="table">
+      <div class="table-header">
+        <div class="hi">
+          <a class="fl">Time/Date</a>
+        </div>
+        <div class="hi">
+          <a id="draws" class="fl fl--number">Token</a>
+        </div>
+        <div class="hi">
+          <a id="losses" class="fl fl--number fl--active">Exchange</a>
+        </div>
+      </div>
+      <div class="table-content">
+        <% if (data.length!=0) {%> <% data.forEach(function(i){ %>
+
+        <div class="table-row" onclick="window.open('<%= i.link %>')">
+          <div class="table-data">
+            <%= new Date(i.date_time).getDate()+"/"+(new
+            Date(i.date_time).getMonth()+1)+"/"+new
+            Date(i.date_time).getFullYear() + " ("+new
+            Date(i.date_time).getHours() + ":"+new
+            Date(i.date_time).getMinutes() + ":"+new
+            Date(i.date_time).getSeconds()+")" %>
+          </div>
+          <div class="table-data"><%= i.name %></div>
+          <div class="table-data"><%= i.exc %></div>
+        </div>
+
+        <% }); %> <% } %>
+      </div>
+    </div>
+    <script>
+      const socket = io();
+      socket.on("data", (i) => {
+        console.log(i);
+        var newItem = document.createElement("div");
+        newItem.classList = "table-row";
+        newItem.onclick = () => {
+          window.open(i.link);
+        };
+        newItem.innerHTML = `<div class="table-data">
+             ${
+               new Date(i.date_time).getDate() +
+               "/" +
+               (new Date(i.date_time).getMonth() + 1) +
+               "/" +
+               new Date(i.date_time).getFullYear() +
+               " (" +
+               new Date(i.date_time).getHours() +
+               ":" +
+               new Date(i.date_time).getMinutes() +
+               ":" +
+               new Date(i.date_time).getSeconds() +
+               ")"
+             }
+          </div>
+          <div class="table-data">${i.name}</div>
+          <div class="table-data">${i.exc}</div>`;
+        var list = document.querySelector(".table-content");
+        list.insertBefore(newItem, list.childNodes[0]);
+      });
+    </script>
+  </body>
+</html>
