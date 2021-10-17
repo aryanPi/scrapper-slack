@@ -1,14 +1,14 @@
 {
   "name": "AlertingBot Telegram Scrapping",
-  "description": "Scrapping/Parsing Message from telegram of CryptocurrencyAlertingBot and get new stocks list and post that to the webpage with websocket live functions.",
-  "repository": "https://github.com/aryanPi/scapper-pi",
+  "description": "Scrapping/Parsing Message from slack of CryptocurrencyAlertingBot and get new stocks list and post that to the webpage with websocket live functions.",
+  "repository": "https://github.com/aryanPi/scapper-slack",
   "logo": "https://node-js-sample.herokuapp.com/node.png",
   "keywords": [
     "CryptocurrencyAlertingBot",
     "bot",
     "telegram",
     "telegram scraping",
-    "crypto",
+    "crypto","slack",
     "new stocks"
   ],
   "env": {
