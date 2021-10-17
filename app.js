@@ -37,7 +37,7 @@ server.listen(process.env.PORT || port, (res) => {
 
 const token =
   process.env.BOT_TOKEN ||
-  "xoxb-2614750175088-2600308342099-FKeUIJHZfVb0h1yovOChiZ4X";
+  "none";
 
 //const token = "xoxb-2614750175088-2596706234629-Qi0a1i4kzW3ZGf7bYz9lGRkR";
 console.log(token);
