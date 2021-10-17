@@ -39,7 +39,6 @@ const token =
   process.env.BOT_TOKEN ||
   "none";
 
-//const token = "xoxb-2614750175088-2596706234629-Qi0a1i4kzW3ZGf7bYz9lGRkR";
 console.log(token);
 if (token != "none") {
   const { RTMClient } = require("@slack/rtm-api");
