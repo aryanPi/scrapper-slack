@@ -1,51 +1,80 @@
-const token = "2002317302:AAF-1xqBqMrhFRZkDhJFY38M8DqWZe1YHjM";
-
-// Express.js + Slimbot
 const express = require("express");
+let ejs = require("ejs");
+const path = require("path");
+const db = require("./customdb");
+const socketIO = require("socket.io");
+const session = require("express-session");
+
 const app = express();
 
-const Slimbot = require("slimbot");
-const slimbot = new Slimbot(token);
+app.use(express.static(path.join(__dirname, "views")));
+app.set("view engine", "ejs");
 
-slimbot.on("message", (message) => {
-  console.log("here");
-  if (message.text === "/login") {
-    let optionalParams = {
-      parse_mode: "Markdown",
-      reply_markup: JSON.stringify({
-        inline_keyboard: [
-          [
-            {
-              text: "Login",
-              login_url: {
-                url: "http://50be-2409-4050-2d35-2cde-604e-d2cc-6900-53dd.ngrok.io/login",
-              },
-            },
-          ],
-        ],
-      }),
+//HTTP
+const http = require("http");
+const server = http.createServer(app);
+const port = 80;
+
+app.get("/", async (req, res) => {
+  var d = await db.getRecord();
+  //var data = await cursor(`select * from data;`);
+  res.render("index", { data: d });
+});
+
+const io = socketIO(server);
+
+io.on("connection", (socket) => {
+  console.log("new connection");
+  socket.on("test", (data) => {
+    io.emit("data", data);
+  });
+  socket.on("clear", (data) => {});
+});
+
+server.listen(process.env.PORT || port, (res) => {
+  console.log("Running");
+});
+
+const token =
+  process.env.BOT_TOKEN ||
+  "xoxb-2614750175088-2615973460483-fPKL4Eap67kVR1C4ogV8j4Zn";
+
+console.log(token);
+if (token != "none") {
+  console.log("runned");
+  const { RTMClient } = require("@slack/rtm-api");
+  const rtm = new RTMClient(token);
+  rtm.start().catch(console.error);
+
+  rtm.on("message", (event) => {
+    console.log(event.text);
+    if (!event) return;
+    if (!event.text) return;
+    var message = event.text;
+    if (message.indexOf("has been listed") == -1) return;
+    var name = message.substring(
+      message.indexOf("|") + 1,
+      message.indexOf(">")
+    );
+    var s = message.split("<")[2];
+    var exc = s.substring(s.indexOf("|") + 1, s.lastIndexOf(">"));
+    var link1 = s.substring(s.indexOf("|"), 0);
+    s = message.split("<")[0];
+    var link2 = message.substring(
+      message.indexOf("<") + 1,
+      message.indexOf("|")
+    );
+
+    console.log("1: " + name, "\n2:", exc, "\n3:", link1,'\n4: ',link2);
+    var date_time = new Date().getTime();
+    toSend = {
+      name: name,
+      date_time: date_time,
+      exc: exc,
+      link1: link1,
+      link2: link2,
     };
-
-    slimbot.sendMessage(
-      message.chat.id,
-      "Click this button to login!",
-      optionalParams
-    );
-  } else if (message.text === "/start") {
-    slimbot.sendMessage(
-      message.chat.id,
-      "Click /login or type it into the chat to begin login!"
-    );
-  }
-});
-
-slimbot.startPolling(() => {
-  console.log("started");
-});
-app.get("/login", (req, res) => {
-  console.log(req.query);
-});
-
-app.listen(9999, () => {
-  console.log("Server started on port 9999");
-});
+    io.emit("data", toSend);
+    db.createNewRecord({ name, date_time, exc, link1, link2 });
+  });
+}

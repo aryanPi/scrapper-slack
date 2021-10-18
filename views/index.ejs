@@ -12,7 +12,6 @@
     <!-- <div style="width: 100%">
       <button class="btn" onclick="clearDB()">Clear Database</button>
     </div> -->
-    <h1>Scrapper Pi</h1>
 
     <div class="table">
       <div class="table-header">
@@ -29,17 +28,12 @@
       <div class="table-content">
         <% if (data.length!=0) {%> <% data.forEach(function(i){ %>
 
-        <div class="table-row" onclick="window.open('<%= i.link %>')">
+        <div class="table-row" >
           <div class="table-data">
-            <%= new Date(i.date_time).getDate()+"/"+(new
-            Date(i.date_time).getMonth()+1)+"/"+new
-            Date(i.date_time).getFullYear() + " ("+new
-            Date(i.date_time).getHours() + ":"+new
-            Date(i.date_time).getMinutes() + ":"+new
-            Date(i.date_time).getSeconds()+")" %>
+            <%= new Date(i.date_time).toLocaleString() %>
           </div>
-          <div class="table-data"><%= i.name %></div>
-          <div class="table-data"><%= i.exc %></div>
+          <div onclick="window.open('<%= i.link2 %>')" class="table-data"><%= i.name %></div>
+          <div onclick="window.open('<%= i.link1 %>')" class="table-data"><%= i.exc %></div>
         </div>
 
         <% }); %> <% } %>
@@ -51,27 +45,13 @@
         console.log(i);
         var newItem = document.createElement("div");
         newItem.classList = "table-row";
-        newItem.onclick = () => {
-          window.open(i.link);
-        };
         newItem.innerHTML = `<div class="table-data">
              ${
-               new Date(i.date_time).getDate() +
-               "/" +
-               (new Date(i.date_time).getMonth() + 1) +
-               "/" +
-               new Date(i.date_time).getFullYear() +
-               " (" +
-               new Date(i.date_time).getHours() +
-               ":" +
-               new Date(i.date_time).getMinutes() +
-               ":" +
-               new Date(i.date_time).getSeconds() +
-               ")"
+               new Date(i.date_time).toLocaleString()
              }
           </div>
-          <div class="table-data">${i.name}</div>
-          <div class="table-data">${i.exc}</div>`;
+          <div onclick="window.open('${i.link2}')" class="table-data">${i.name}</div>
+          <div onclick="window.open('${i.link1}')" class="table-data">${i.exc}</div>`;
         var list = document.querySelector(".table-content");
         list.insertBefore(newItem, list.childNodes[0]);
       });
