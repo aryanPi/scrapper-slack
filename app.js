@@ -65,7 +65,13 @@ if (token != "none") {
       message.indexOf("|")
     );
 
-    console.log("1: " + name, "\n2:", exc, "\n3:", link1,'\n4: ',link2);
+    if (link1.startsWith("https://cryptocurrencyalerting.com/alert")) {
+    exc=name  
+    name = message.substring(0, message.indexOf("has been listed on"));
+      link1 = link2
+      link2 = ''
+    } 
+    console.log("1: " + name, "\n2:", exc, "\n3:", link1, "\n4: ", link2);
     var date_time = new Date().getTime();
     toSend = {
       name: name,
